@@ -1,0 +1,10 @@
+{
+	"name" : "deadbeef",
+	"description" : "Dlang bindings to DeaDBeeF plugin API",
+	"authors" : [ "Maxim Freck" ],
+	"license" : "BOOST-1.0",
+
+	"sourcePaths": ["source/"],
+
+	"targetType": "library"
+}
