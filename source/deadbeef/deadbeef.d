@@ -29,8 +29,9 @@ import core.sys.posix.dirent: dirent;
 
 extern (C):
 @trusted:
-nothrow:
 @nogc:
+nothrow:
+
 
 // every plugin must define the following entry-point:
 // extern "C" DB_plugin_t* $MODULENAME_load (DB_functions_t *api);
@@ -475,121 +476,121 @@ struct DB_functions_t {
 	int vminor;
 
 	// md5sum calc
-	void function(ubyte[16] sig, in char *input, int len) md5;
-	void function(char *str, in ubyte[16] sig) md5_to_str;
-	void function(DB_md5_t *s) md5_init;
-	void function(DB_md5_t *s, in ubyte *data, int nbytes) md5_append;
-	void function(DB_md5_t *s, ubyte[16] digest) md5_finish;
+	void function(ubyte[16] sig, in char *input, int len) nothrow @nogc md5;
+	void function(char *str, in ubyte[16] sig) nothrow @nogc md5_to_str;
+	void function(DB_md5_t *s) nothrow @nogc md5_init;
+	void function(DB_md5_t *s, in ubyte *data, int nbytes) nothrow @nogc md5_append;
+	void function(DB_md5_t *s, ubyte[16] digest) nothrow @nogc md5_finish;
 
 	// playback control
-	DB_output_s* function() get_output;
-	float function() playback_get_pos; // [0..100]
-	void function(float pos) playback_set_pos; // [0..100]
+	DB_output_s* function() nothrow @nogc get_output;
+	float function() nothrow @nogc playback_get_pos; // [0..100]
+	void function(float pos) nothrow @nogc playback_set_pos; // [0..100]
 
 	// streamer access
-	DB_playItem_t *function() streamer_get_playing_track;
-	DB_playItem_t *function() streamer_get_streaming_track;
-	float function() streamer_get_playpos;
-	int function(int len) streamer_ok_to_read;
-	void function(int full) streamer_reset;
-	int function(char *bytes, int size) streamer_read;
-	void function(int bitrate) streamer_set_bitrate;
-	int function() streamer_get_apx_bitrate;
-	DB_fileinfo_s *function() streamer_get_current_fileinfo;
-	int function() streamer_get_current_playlist;
-	ddb_dsp_context_s * function() streamer_get_dsp_chain;
-	void function(ddb_dsp_context_s *chain) streamer_set_dsp_chain;
-	void function() streamer_dsp_refresh; // call after changing parameters
+	DB_playItem_t *function() nothrow @nogc streamer_get_playing_track;
+	DB_playItem_t *function() nothrow @nogc streamer_get_streaming_track;
+	float function() nothrow @nogc streamer_get_playpos;
+	int function(int len) nothrow @nogc streamer_ok_to_read;
+	void function(int full) nothrow @nogc streamer_reset;
+	int function(char *bytes, int size) nothrow @nogc streamer_read;
+	void function(int bitrate) nothrow @nogc streamer_set_bitrate;
+	int function() nothrow @nogc streamer_get_apx_bitrate;
+	DB_fileinfo_s *function() nothrow @nogc streamer_get_current_fileinfo;
+	int function() nothrow @nogc streamer_get_current_playlist;
+	ddb_dsp_context_s * function() nothrow @nogc streamer_get_dsp_chain;
+	void function(ddb_dsp_context_s *chain) nothrow @nogc streamer_set_dsp_chain;
+	void function() nothrow @nogc streamer_dsp_refresh; // call after changing parameters
 
 	// system folders
 	// normally functions will return standard folders derived from --prefix
 	// portable version will return pathes specified in comments below
 	/+static if (DDB_API_LEVEL < 8) {+/
-		immutable char* function() get_config_dir; // installdir/config | $XDG_CONFIG_HOME/.config/deadbeef
-		immutable char* function() get_prefix; // installdir | PREFIX
-		immutable char* function() get_doc_dir; // installdir/doc | DOCDIR
-		immutable char* function() get_plugin_dir; // installdir/plugins | LIBDIR/deadbeef
-		immutable char* function() get_pixmap_dir; // installdir/pixmaps | PREFIX "/share/deadbeef/pixmaps"
+		immutable char* function() nothrow @nogc get_config_dir; // installdir/config | $XDG_CONFIG_HOME/.config/deadbeef
+		immutable char* function() nothrow @nogc get_prefix; // installdir | PREFIX
+		immutable char* function() nothrow @nogc get_doc_dir; // installdir/doc | DOCDIR
+		immutable char* function() nothrow @nogc get_plugin_dir; // installdir/plugins | LIBDIR/deadbeef
+		immutable char* function() nothrow @nogc get_pixmap_dir; // installdir/pixmaps | PREFIX "/share/deadbeef/pixmaps"
 	/+}+/
 
 	// process control
 	void function() quit;
 
 	// threading
-	intptr_t function(void function(void *ctx) fn, void *ctx) thread_start;
-	intptr_t function(void function(void *ctx) fn, void *ctx) thread_start_low_priority;
-	int function(intptr_t tid) thread_join;
-	int function(intptr_t tid) thread_detach;
-	void function(void *retval) thread_exit;
-	uintptr_t function() mutex_create;
-	uintptr_t function() mutex_create_nonrecursive;
-	void function(uintptr_t mtx) mutex_free;
-	int function(uintptr_t mtx) mutex_lock;
-	int function(uintptr_t mtx) mutex_unlock;
-	uintptr_t function() cond_create;
-	void function(uintptr_t cond) cond_free;
-	int function(uintptr_t cond, uintptr_t mutex) cond_wait;
-	int function(uintptr_t cond) cond_signal;
-	int function(uintptr_t cond) cond_broadcast;
+	intptr_t function(void function(void *ctx) fn, void *ctx) nothrow @nogc thread_start;
+	intptr_t function(void function(void *ctx) fn, void *ctx) nothrow @nogc thread_start_low_priority;
+	int function(intptr_t tid) nothrow @nogc thread_join;
+	int function(intptr_t tid) nothrow @nogc thread_detach;
+	void function(void *retval) nothrow @nogc thread_exit;
+	uintptr_t function() nothrow @nogc mutex_create;
+	uintptr_t function() nothrow @nogc mutex_create_nonrecursive;
+	void function(uintptr_t mtx) nothrow @nogc mutex_free;
+	int function(uintptr_t mtx) nothrow @nogc mutex_lock;
+	int function(uintptr_t mtx) nothrow @nogc mutex_unlock;
+	uintptr_t function() nothrow @nogc cond_create;
+	void function(uintptr_t cond) nothrow @nogc cond_free;
+	int function(uintptr_t cond, uintptr_t mutex) nothrow @nogc cond_wait;
+	int function(uintptr_t cond) nothrow @nogc cond_signal;
+	int function(uintptr_t cond) nothrow @nogc cond_broadcast;
 
 	/////// playlist management //////
-	void function(ddb_playlist_t *plt) plt_ref;
-	void function(ddb_playlist_t *plt) plt_unref;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_ref;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_unref;
 
 	// total number of playlists
-	int function() plt_get_count;
+	int function() nothrow @nogc plt_get_count;
 
 
 	// 1st item in playlist nr. 'plt'
-	DB_playItem_t * function(int plt) plt_get_head;
+	DB_playItem_t * function(int plt) nothrow @nogc plt_get_head;
 
 	// nr. of selected items in playlist nr. 'plt'
-	int function(int plt) plt_get_sel_count;
+	int function(int plt) nothrow @nogc plt_get_sel_count;
 
 	// add new playlist into position before nr. 'before', with title='title'
 	// returns index of new playlist
-	int function(int before, in char *title) plt_add;
+	int function(int before, in char *title) nothrow @nogc plt_add;
 
 	// remove playlist nr. plt
-	void function(int plt) plt_remove;
+	void function(int plt) nothrow @nogc plt_remove;
 
 	// clear playlist
-	void function(ddb_playlist_t *plt) plt_clear;
-	void function() pl_clear;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_clear;
+	void function() nothrow @nogc pl_clear;
 
 	// set current playlist
-	void function(ddb_playlist_t *plt) plt_set_curr;
-	void function(int plt) plt_set_curr_idx;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_set_curr;
+	void function(int plt) nothrow @nogc plt_set_curr_idx;
 
 	// get current playlist
 	// note: caller is responsible to call plt_unref after using pointer
 	// returned by plt_get_curr
-	ddb_playlist_t* function() plt_get_curr;
-	int function() plt_get_curr_idx;
+	ddb_playlist_t* function() nothrow @nogc plt_get_curr;
+	int function() nothrow @nogc plt_get_curr_idx;
 
 	// move playlist nr. 'from' into position before nr. 'before', where
 	// before=-1 means last position
-	void function(int from, int before) plt_move;
+	void function(int from, int before) nothrow @nogc plt_move;
 
 	// playlist saving and loading
 	/+static if (DDB_API_LEVEL < 5) {+/
-		DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) plt_load;
+		DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) nothrow @nogc plt_load;
 	/+}+/
-	int function(ddb_playlist_t *plt, DB_playItem_t *first, DB_playItem_t *last, in char *fname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) plt_save;
+	int function(ddb_playlist_t *plt, DB_playItem_t *first, DB_playItem_t *last, in char *fname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) nothrow @nogc plt_save;
 
-	ddb_playlist_t* function(int idx) plt_get_for_idx;
-	int function(ddb_playlist_t *plt, char *buffer, int bufsize) plt_get_title;
-	int function(ddb_playlist_t *plt, in char *title) plt_set_title;
+	ddb_playlist_t* function(int idx) nothrow @nogc plt_get_for_idx;
+	int function(ddb_playlist_t *plt, char *buffer, int bufsize) nothrow @nogc plt_get_title;
+	int function(ddb_playlist_t *plt, in char *title) nothrow @nogc plt_set_title;
 
 	// increments modification index
-	void function(ddb_playlist_t *handle) plt_modified;
+	void function(ddb_playlist_t *handle) nothrow @nogc plt_modified;
 
 	// returns modication index
 	// the index is incremented by 1 every time playlist changes
-	int function(ddb_playlist_t *handle) plt_get_modification_idx;
+	int function(ddb_playlist_t *handle) nothrow @nogc plt_get_modification_idx;
 
 	// return index of an item in specified playlist, or -1 if not found
-	int function(ddb_playlist_t *plt, DB_playItem_t *it, int iter) plt_get_item_idx;
+	int function(ddb_playlist_t *plt, DB_playItem_t *it, int iter) nothrow @nogc plt_get_item_idx;
 
 	// playlist metadata
 	// this kind of metadata is stored in playlist (dbpl) files
@@ -598,99 +599,99 @@ struct DB_functions_t {
 	// for example, playlist tab color can be stored there, etc
 
 	// add meta if it doesn't exist yet
-	void function(ddb_playlist_t *handle, in char *key, in char *value) plt_add_meta;
+	void function(ddb_playlist_t *handle, in char *key, in char *value) nothrow @nogc plt_add_meta;
 
 	// replace (or add) existing meta
-	void function(ddb_playlist_t *handle, in char *key, in char *value) plt_replace_meta;
+	void function(ddb_playlist_t *handle, in char *key, in char *value) nothrow @nogc plt_replace_meta;
 
 	// append meta to existing one, or add if doesn't exist
-	void function(ddb_playlist_t *handle, in char *key, in char *value) plt_append_meta;
+	void function(ddb_playlist_t *handle, in char *key, in char *value) nothrow @nogc plt_append_meta;
 
 	// set integer meta (works same as replace)
-	void function(ddb_playlist_t *handle, in char *key, int value) plt_set_meta_int;
+	void function(ddb_playlist_t *handle, in char *key, int value) nothrow @nogc plt_set_meta_int;
 
 	// set float meta (works same as replace)
-	void function(ddb_playlist_t *handle, in char *key, float value) plt_set_meta_float;
+	void function(ddb_playlist_t *handle, in char *key, float value) nothrow @nogc plt_set_meta_float;
 
 	// plt_find_meta must always be used in the pl_lock/unlock block
-	immutable char* function(ddb_playlist_t *handle, in char *key) plt_find_meta;
+	immutable char* function(ddb_playlist_t *handle, in char *key) nothrow @nogc plt_find_meta;
 
 	// returns head of metadata linked list, for direct access
 	// remember pl_lock/unlock
-	DB_metaInfo_t* function(ddb_playlist_t *handle) plt_get_metadata_head;
+	DB_metaInfo_t* function(ddb_playlist_t *handle) nothrow @nogc plt_get_metadata_head;
 
 	// delete meta item from list
-	void function(ddb_playlist_t *handle, DB_metaInfo_t *meta) plt_delete_metadata;
+	void function(ddb_playlist_t *handle, DB_metaInfo_t *meta) nothrow @nogc plt_delete_metadata;
 
 	// returns integer value of requested meta, def is the default value if not found
-	int function(ddb_playlist_t *handle, in char *key, int def) plt_find_meta_int;
+	int function(ddb_playlist_t *handle, in char *key, int def) nothrow @nogc plt_find_meta_int;
 
 	// returns float value of requested meta, def is the default value if not found
-	float function(ddb_playlist_t *handle, in char *key, float def) plt_find_meta_float;
+	float function(ddb_playlist_t *handle, in char *key, float def) nothrow @nogc plt_find_meta_float;
 
 	// delete all metadata
-	void function(ddb_playlist_t *handle) plt_delete_all_meta;
+	void function(ddb_playlist_t *handle) nothrow @nogc plt_delete_all_meta;
 
 	// operating on playlist items
-	DB_playItem_t* function(ddb_playlist_t *playlist, DB_playItem_t *after, DB_playItem_t *it) plt_insert_item;
+	DB_playItem_t* function(ddb_playlist_t *playlist, DB_playItem_t *after, DB_playItem_t *it) nothrow @nogc plt_insert_item;
 	/+static if (DDB_API_LEVEL < 5) {+/
-		DB_playItem_t* function(ddb_playlist_t *playlist, DB_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) plt_insert_file;
-		DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, in char *dirname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) plt_insert_dir;
+		DB_playItem_t* function(ddb_playlist_t *playlist, DB_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) nothrow @nogc plt_insert_file;
+		DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, in char *dirname, int *pabort, int function(DB_playItem_t *it, void *data) cb, void *user_data) nothrow @nogc plt_insert_dir;
 	/+}+/
-	void function(ddb_playlist_t *plt, DB_playItem_t *it, float duration) plt_set_item_duration;
-	int function(ddb_playlist_t *playlist, DB_playItem_t *it) plt_remove_item;
-	int function(ddb_playlist_t *playlist) plt_getselcount;
-	float function(ddb_playlist_t *plt) plt_get_totaltime;
-	int function(ddb_playlist_t *plt, int iter) plt_get_item_count;
-	int function(ddb_playlist_t *plt) plt_delete_selected;
-	void function(ddb_playlist_t *plt, int iter, int cursor) plt_set_cursor;
-	int function(ddb_playlist_t *plt, int iter) plt_get_cursor;
-	void function(ddb_playlist_t *plt) plt_select_all;
-	void function(ddb_playlist_t *plt) plt_crop_selected;
-	DB_playItem_t* function(ddb_playlist_t *plt, int iter) plt_get_first;
-	DB_playItem_t* function(ddb_playlist_t *plt, int iter) plt_get_last;
-	DB_playItem_t* function(ddb_playlist_t *playlist, int idx, int iter) plt_get_item_for_idx;
-	void function(ddb_playlist_t *to, int iter, ddb_playlist_t *from, DB_playItem_t *drop_before, uint *indexes, int count) plt_move_items;
-	void function(ddb_playlist_t *to, int iter, ddb_playlist_t * from, DB_playItem_t *before, uint *indices, int cnt) plt_copy_items;
-	void function(ddb_playlist_t *plt) plt_search_reset;
-	void function(ddb_playlist_t *plt, in char *text) plt_search_process;
+	void function(ddb_playlist_t *plt, DB_playItem_t *it, float duration) nothrow @nogc plt_set_item_duration;
+	int function(ddb_playlist_t *playlist, DB_playItem_t *it) nothrow @nogc plt_remove_item;
+	int function(ddb_playlist_t *playlist) nothrow @nogc plt_getselcount;
+	float function(ddb_playlist_t *plt) nothrow @nogc plt_get_totaltime;
+	int function(ddb_playlist_t *plt, int iter) nothrow @nogc plt_get_item_count;
+	int function(ddb_playlist_t *plt) nothrow @nogc plt_delete_selected;
+	void function(ddb_playlist_t *plt, int iter, int cursor) nothrow @nogc plt_set_cursor;
+	int function(ddb_playlist_t *plt, int iter) nothrow @nogc plt_get_cursor;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_select_all;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_crop_selected;
+	DB_playItem_t* function(ddb_playlist_t *plt, int iter) nothrow @nogc plt_get_first;
+	DB_playItem_t* function(ddb_playlist_t *plt, int iter) nothrow @nogc plt_get_last;
+	DB_playItem_t* function(ddb_playlist_t *playlist, int idx, int iter) nothrow @nogc plt_get_item_for_idx;
+	void function(ddb_playlist_t *to, int iter, ddb_playlist_t *from, DB_playItem_t *drop_before, uint *indexes, int count) nothrow @nogc plt_move_items;
+	void function(ddb_playlist_t *to, int iter, ddb_playlist_t * from, DB_playItem_t *before, uint *indices, int cnt) nothrow @nogc plt_copy_items;
+	void function(ddb_playlist_t *plt) nothrow @nogc plt_search_reset;
+	void function(ddb_playlist_t *plt, in char *text) nothrow @nogc plt_search_process;
 
 	// sort using the title formatting v1 (deprecated)
 	/+static if (DDB_API_LEVEL < 8) {+/
-		void function(ddb_playlist_t *plt, int iter, int id, in char *format, int order) plt_sort;
+		void function(ddb_playlist_t *plt, int iter, int id, in char *format, int order) nothrow @nogc plt_sort;
 	/+}+/
 
 	/+static if (DDB_API_LEVEL < 5) {+/
 		// add files and folders to current playlist
-		int function(ddb_playlist_t *plt, in char *fname, int function(DB_playItem_t *it, void *data) cb, void *user_data) plt_add_file;
-		int function(ddb_playlist_t *plt, in char *dirname, int function(DB_playItem_t *it, void *data) cb, void *user_data) plt_add_dir;
+		int function(ddb_playlist_t *plt, in char *fname, int function(DB_playItem_t *it, void *data) cb, void *user_data) nothrow @nogc plt_add_file;
+		int function(ddb_playlist_t *plt, in char *dirname, int function(DB_playItem_t *it, void *data) cb, void *user_data) nothrow @nogc plt_add_dir;
 	/+}+/
 
 	// cuesheet support
-	DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, DB_playItem_t *origin, in ubyte *buffer, int buffersize, int numsamples, int samplerate) plt_insert_cue_from_buffer;
-	DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, DB_playItem_t *origin, int numsamples, int samplerate) plt_insert_cue;
+	DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, DB_playItem_t *origin, in ubyte *buffer, int buffersize, int numsamples, int samplerate) nothrow @nogc plt_insert_cue_from_buffer;
+	DB_playItem_t* function(ddb_playlist_t *plt, DB_playItem_t *after, DB_playItem_t *origin, int numsamples, int samplerate) nothrow @nogc plt_insert_cue;
 
 	// playlist locking
-	void function() pl_lock;
-	void function() pl_unlock;
+	void function() nothrow @nogc pl_lock;
+	void function() nothrow @nogc pl_unlock;
 
 	// playlist tracks access
-	DB_playItem_t* function() pl_item_alloc;
-	DB_playItem_t* function(in char *fname, in char *decoder_id) pl_item_alloc_init;
-	void function(DB_playItem_t *it) pl_item_ref;
-	void function(DB_playItem_t *it) pl_item_unref;
-	void function(DB_playItem_t *output, DB_playItem_t *input) pl_item_copy;
+	DB_playItem_t* function() nothrow @nogc pl_item_alloc;
+	DB_playItem_t* function(in char *fname, in char *decoder_id) nothrow @nogc pl_item_alloc_init;
+	void function(DB_playItem_t *it) nothrow @nogc pl_item_ref;
+	void function(DB_playItem_t *it) nothrow @nogc pl_item_unref;
+	void function(DB_playItem_t *output, DB_playItem_t *input) nothrow @nogc pl_item_copy;
 
 	// request lock for adding files to playlist
 	// this function may return -1 if it is not possible to add files right now.
 	// caller must cancel operation in this case,
 	// or wait until previous operation finishes
 	/+static if (DDB_API_LEVEL < 5) {+/
-		int function(ddb_playlist_t *plt) pl_add_files_begin;
+		int function(ddb_playlist_t *plt) nothrow @nogc pl_add_files_begin;
 
 		// release the lock for adding files to playlist
 		// end must be called when add files operation is finished
-		void function() pl_add_files_end;
+		void function() nothrow @nogc pl_add_files_end;
 	/+}+/
 
 	// most of this functions are self explanatory
@@ -699,66 +700,66 @@ struct DB_functions_t {
 	// --- the following functions work with current playlist ---
 
 	// get index of the track in MAIN
-	int function(DB_playItem_t *it) pl_get_idx_of;
+	int function(DB_playItem_t *it) nothrow @nogc pl_get_idx_of;
 
 	// get index of the track in MAIN or SEARCH
-	int function(DB_playItem_t *it, int iter) pl_get_idx_of_iter;
+	int function(DB_playItem_t *it, int iter) nothrow @nogc pl_get_idx_of_iter;
 
 	// get track for index in MAIN
-	DB_playItem_t* function(int idx) pl_get_for_idx;
+	DB_playItem_t* function(int idx) nothrow @nogc pl_get_for_idx;
 
 	// get track for index in MAIN or SEARCH
-	DB_playItem_t* function(int idx, int iter) pl_get_for_idx_and_iter;
+	DB_playItem_t* function(int idx, int iter) nothrow @nogc pl_get_for_idx_and_iter;
 
 	// get total play time of all tracks in MAIN
-	float function() pl_get_totaltime;
+	float function() nothrow @nogc pl_get_totaltime;
 
 	// get number of tracks in MAIN or SEARCH
-	int function(int iter) pl_getcount;
+	int function(int iter) nothrow @nogc pl_getcount;
 
 	// delete selected tracks
-	int function() pl_delete_selected;
+	int function() nothrow @nogc pl_delete_selected;
 
 	// set cursor position in MAIN or SEARCH
-	void function(int iter, int cursor) pl_set_cursor;
+	void function(int iter, int cursor) nothrow @nogc pl_set_cursor;
 
 	// get cursor position in MAIN
-	int function(int iter) pl_get_cursor;
+	int function(int iter) nothrow @nogc pl_get_cursor;
 
 	// remove all except selected tracks
-	void function() pl_crop_selected;
+	void function() nothrow @nogc pl_crop_selected;
 
 	// get number of selected tracks
-	int function() pl_getselcount;
+	int function() nothrow @nogc pl_getselcount;
 
 	// get first track in MAIN or SEARCH
-	DB_playItem_t* function(int iter) pl_get_first;
+	DB_playItem_t* function(int iter) nothrow @nogc pl_get_first;
 
 	// get last track in MAIN or SEARCH
-	DB_playItem_t* function(int iter) pl_get_last;
+	DB_playItem_t* function(int iter) nothrow @nogc pl_get_last;
 
 	// --- misc functions ---
 
 	// mark the track as selected or unselected (1 or 0 respectively)
-	void function(DB_playItem_t *it, int sel) pl_set_selected;
+	void function(DB_playItem_t *it, int sel) nothrow @nogc pl_set_selected;
 
 	// test whether the track is selected
-	int function(DB_playItem_t *it) pl_is_selected;
+	int function(DB_playItem_t *it) nothrow @nogc pl_is_selected;
 
 	// save current playlist
-	int function() pl_save_current;
+	int function() nothrow @nogc pl_save_current;
 
 	// save all playlists
-	int function() pl_save_all;
+	int function() nothrow @nogc pl_save_all;
 
 	// select all tracks in current playlist
-	void function() pl_select_all;
+	void function() nothrow @nogc pl_select_all;
 
 	// get next track
-	DB_playItem_t* function(DB_playItem_t *it, int iter) pl_get_next;
+	DB_playItem_t* function(DB_playItem_t *it, int iter) nothrow @nogc pl_get_next;
 
     // get previous track
-	DB_playItem_t* function(DB_playItem_t *it, int iter) pl_get_prev;
+	DB_playItem_t* function(DB_playItem_t *it, int iter) nothrow @nogc pl_get_prev;
 
 	/*
 		pl_format_title formats the line for display in playlist
@@ -787,112 +788,112 @@ struct DB_functions_t {
 		more to come
 	*/
 	/+static if (DDB_API_LEVEL < 8) {+/
-		int function(DB_playItem_t *it, int idx, char *s, int size, int id, in char *fmt) pl_format_title;
+		int function(DB_playItem_t *it, int idx, char *s, int size, int id, in char *fmt) nothrow @nogc pl_format_title;
 
 		// _escaped version wraps all conversions with '' and replaces every ' in conversions with \'
-		int function(DB_playItem_t *it, int idx, char *s, int size, int id, in char *fmt) pl_format_title_escaped;
+		int function(DB_playItem_t *it, int idx, char *s, int size, int id, in char *fmt) nothrow @nogc pl_format_title_escaped;
 	/+}+/
 	// format duration 't' (fractional seconds) into string, for display in playlist
-	void function(float t, char *dur, int size) pl_format_time;
+	void function(float t, char *dur, int size) nothrow @nogc pl_format_time;
 
 	// find which playlist the specified item belongs to, returns NULL if none
-	ddb_playlist_t* function(DB_playItem_t *it) pl_get_playlist;
+	ddb_playlist_t* function(DB_playItem_t *it) nothrow @nogc pl_get_playlist;
 
 	// direct access to metadata structures
 	// not thread-safe, make sure to wrap with pl_lock/pl_unlock
-	DB_metaInfo_t* function(DB_playItem_t *it) pl_get_metadata_head; // returns head of metadata linked list
-	void function(DB_playItem_t *it, DB_metaInfo_t *meta) pl_delete_metadata;
+	DB_metaInfo_t* function(DB_playItem_t *it) nothrow @nogc pl_get_metadata_head; // returns head of metadata linked list
+	void function(DB_playItem_t *it, DB_metaInfo_t *meta) nothrow @nogc pl_delete_metadata;
 
 	// high-level access to metadata
-	void function(DB_playItem_t *it, in char *key, in char *value) pl_add_meta;
-	void function(DB_playItem_t *it, in char *key, in char *value) pl_append_meta;
-	void function(DB_playItem_t *it, in char *key, int value) pl_set_meta_int;
-	void function(DB_playItem_t *it, in char *key, float value) pl_set_meta_float;
-	void function(DB_playItem_t *it, in char *key) pl_delete_meta;
+	void function(DB_playItem_t *it, in char *key, in char *value) nothrow @nogc pl_add_meta;
+	void function(DB_playItem_t *it, in char *key, in char *value) nothrow @nogc pl_append_meta;
+	void function(DB_playItem_t *it, in char *key, int value) nothrow @nogc pl_set_meta_int;
+	void function(DB_playItem_t *it, in char *key, float value) nothrow @nogc pl_set_meta_float;
+	void function(DB_playItem_t *it, in char *key) nothrow @nogc pl_delete_meta;
 
 	// this function is not thread-safe
 	// make sure to wrap it with pl_lock/pl_unlock block
-	immutable char* function(DB_playItem_t *it, in char *key) pl_find_meta;
+	immutable char* function(DB_playItem_t *it, in char *key) nothrow @nogc pl_find_meta;
 
 	// following functions are thread-safe
-	int function(DB_playItem_t *it, in char *key, int def) pl_find_meta_int;
-	float function(DB_playItem_t *it, in char *key, float def) pl_find_meta_float;
-	void function(DB_playItem_t *it, in char *key, in char *value) pl_replace_meta;
-	void function(DB_playItem_t *it) pl_delete_all_meta;
-	float function(DB_playItem_t *it) pl_get_item_duration;
-	uint function(DB_playItem_t *it) pl_get_item_flags;
-	void function(DB_playItem_t *it, uint flags) pl_set_item_flags;
-	void function(DB_playItem_t *from, DB_playItem_t *first, DB_playItem_t *last) pl_items_copy_junk;
+	int function(DB_playItem_t *it, in char *key, int def) nothrow @nogc pl_find_meta_int;
+	float function(DB_playItem_t *it, in char *key, float def) nothrow @nogc pl_find_meta_float;
+	void function(DB_playItem_t *it, in char *key, in char *value) nothrow @nogc pl_replace_meta;
+	void function(DB_playItem_t *it) nothrow @nogc pl_delete_all_meta;
+	float function(DB_playItem_t *it) nothrow @nogc pl_get_item_duration;
+	uint function(DB_playItem_t *it) nothrow @nogc pl_get_item_flags;
+	void function(DB_playItem_t *it, uint flags) nothrow @nogc pl_set_item_flags;
+	void function(DB_playItem_t *from, DB_playItem_t *first, DB_playItem_t *last) nothrow @nogc pl_items_copy_junk;
 	// idx is one of DDB_REPLAYGAIN_* constants
-	void function(DB_playItem_t *it, int idx, float value) pl_set_item_replaygain;
-	float function(DB_playItem_t *it, int idx) pl_get_item_replaygain;
+	void function(DB_playItem_t *it, int idx, float value) nothrow @nogc pl_set_item_replaygain;
+	float function(DB_playItem_t *it, int idx) nothrow @nogc pl_get_item_replaygain;
 
 	// playqueue support (obsolete since API 1.8)
 	/+static if (DDB_API_LEVEL < 8) {+/
-		int function(DB_playItem_t *it) pl_playqueue_push;
-		void function() pl_playqueue_clear;
-		void function() pl_playqueue_pop;
-		void function(DB_playItem_t *it) pl_playqueue_remove;
-		int function(DB_playItem_t *it) pl_playqueue_test;
+		int function(DB_playItem_t *it) nothrow @nogc pl_playqueue_push;
+		void function() nothrow @nogc pl_playqueue_clear;
+		void function() nothrow @nogc pl_playqueue_pop;
+		void function(DB_playItem_t *it) nothrow @nogc pl_playqueue_remove;
+		int function(DB_playItem_t *it) nothrow @nogc pl_playqueue_test;
 	/+}+/
 
 	// volume control
-	void function(float dB) volume_set_db;
-	float function() volume_get_db;
-	void function(float amp) volume_set_amp;
-	float function() volume_get_amp;
-	float function() volume_get_min_db;
+	void function(float dB) nothrow @nogc volume_set_db;
+	float function() nothrow @nogc volume_get_db;
+	void function(float amp) nothrow @nogc volume_set_amp;
+	float function() nothrow @nogc volume_get_amp;
+	float function() nothrow @nogc volume_get_min_db;
 
 	// junk reading/writing
-	int function(DB_playItem_t *it, DB_FILE *fp) junk_id3v1_read;
-	int function(DB_FILE *fp) junk_id3v1_find;
-	int function(FILE *fp, DB_playItem_t *it, in char *enc) junk_id3v1_write;
-	int function(DB_FILE *fp, int *psize) junk_id3v2_find;
-	int function(DB_playItem_t *it, DB_FILE *fp) junk_id3v2_read;
-	int function(DB_playItem_t *it, DB_id3v2_tag_t *tag, DB_FILE *fp) junk_id3v2_read_full;
-	int function(DB_id3v2_tag_t *tag24, DB_id3v2_tag_t *tag23) junk_id3v2_convert_24_to_23;
-	int function(DB_id3v2_tag_t *tag23, DB_id3v2_tag_t *tag24) junk_id3v2_convert_23_to_24;
-	int function(DB_id3v2_tag_t *tag22, DB_id3v2_tag_t *tag24) junk_id3v2_convert_22_to_24;
-	void function(DB_id3v2_tag_t *tag) junk_id3v2_free;
-	int function(FILE *file, DB_id3v2_tag_t *tag) junk_id3v2_write;
-	DB_id3v2_frame_t* function(DB_id3v2_tag_t *tag, in char *frame_id, in char *value) junk_id3v2_add_text_frame;
-	int function(DB_id3v2_tag_t *tag, in char *frame_id) junk_id3v2_remove_frames;
-	int function(DB_playItem_t *it, DB_FILE *fp) junk_apev2_read;
-	int function(DB_playItem_t *it, char *mem, int size) junk_apev2_read_mem;
-	int function(DB_playItem_t *it, DB_apev2_tag_t *tag_store, DB_FILE *fp) junk_apev2_read_full;
-	int function(DB_playItem_t *it, DB_apev2_tag_t *tag_store, char *mem, int memsize) junk_apev2_read_full_mem;
-	int function(DB_FILE *fp, int *psize, uint *pflags, uint *pnumitems) junk_apev2_find;
-	int function(DB_apev2_tag_t *tag, in char *frame_id) junk_apev2_remove_frames;
-	DB_apev2_frame_t* function(DB_apev2_tag_t *tag, in char *frame_id, in char *value) junk_apev2_add_text_frame;
-	void function(DB_apev2_tag_t *tag) junk_apev2_free;
-	int function(FILE *fp, DB_apev2_tag_t *tag, int write_header, int write_footer) junk_apev2_write;
-	int function(DB_FILE *fp) junk_get_leading_size;
-	int function(FILE *fp) junk_get_leading_size_stdio;
-	void function(DB_playItem_t *from, DB_playItem_t *first, DB_playItem_t *last) junk_copy;
-	immutable char * function(in char *s) junk_detect_charset;
-	int function(in char *input, int inlen, char *output, int outlen, in char *cs) junk_recode;
-	int function(in char *input, int inlen, char *output, int outlen, in char *cs_in, in char *cs_out) junk_iconv;
-	int function(DB_playItem_t *it, uint flags, int id3v2_version, in char *id3v1_encoding) junk_rewrite_tags;
+	int function(DB_playItem_t *it, DB_FILE *fp) nothrow @nogc junk_id3v1_read;
+	int function(DB_FILE *fp) nothrow @nogc junk_id3v1_find;
+	int function(FILE *fp, DB_playItem_t *it, in char *enc) nothrow @nogc junk_id3v1_write;
+	int function(DB_FILE *fp, int *psize) nothrow @nogc junk_id3v2_find;
+	int function(DB_playItem_t *it, DB_FILE *fp) nothrow @nogc junk_id3v2_read;
+	int function(DB_playItem_t *it, DB_id3v2_tag_t *tag, DB_FILE *fp) nothrow @nogc junk_id3v2_read_full;
+	int function(DB_id3v2_tag_t *tag24, DB_id3v2_tag_t *tag23) nothrow @nogc junk_id3v2_convert_24_to_23;
+	int function(DB_id3v2_tag_t *tag23, DB_id3v2_tag_t *tag24) nothrow @nogc junk_id3v2_convert_23_to_24;
+	int function(DB_id3v2_tag_t *tag22, DB_id3v2_tag_t *tag24) nothrow @nogc junk_id3v2_convert_22_to_24;
+	void function(DB_id3v2_tag_t *tag) nothrow @nogc junk_id3v2_free;
+	int function(FILE *file, DB_id3v2_tag_t *tag) nothrow @nogc junk_id3v2_write;
+	DB_id3v2_frame_t* function(DB_id3v2_tag_t *tag, in char *frame_id, in char *value) nothrow @nogc junk_id3v2_add_text_frame;
+	int function(DB_id3v2_tag_t *tag, in char *frame_id) nothrow @nogc junk_id3v2_remove_frames;
+	int function(DB_playItem_t *it, DB_FILE *fp) nothrow @nogc junk_apev2_read;
+	int function(DB_playItem_t *it, char *mem, int size) nothrow @nogc junk_apev2_read_mem;
+	int function(DB_playItem_t *it, DB_apev2_tag_t *tag_store, DB_FILE *fp) nothrow @nogc junk_apev2_read_full;
+	int function(DB_playItem_t *it, DB_apev2_tag_t *tag_store, char *mem, int memsize) nothrow @nogc junk_apev2_read_full_mem;
+	int function(DB_FILE *fp, int *psize, uint *pflags, uint *pnumitems) nothrow @nogc junk_apev2_find;
+	int function(DB_apev2_tag_t *tag, in char *frame_id) nothrow @nogc junk_apev2_remove_frames;
+	DB_apev2_frame_t* function(DB_apev2_tag_t *tag, in char *frame_id, in char *value) nothrow @nogc junk_apev2_add_text_frame;
+	void function(DB_apev2_tag_t *tag) nothrow @nogc junk_apev2_free;
+	int function(FILE *fp, DB_apev2_tag_t *tag, int write_header, int write_footer) nothrow @nogc junk_apev2_write;
+	int function(DB_FILE *fp) nothrow @nogc junk_get_leading_size;
+	int function(FILE *fp) nothrow @nogc junk_get_leading_size_stdio;
+	void function(DB_playItem_t *from, DB_playItem_t *first, DB_playItem_t *last) nothrow @nogc junk_copy;
+	immutable char * function(in char *s) nothrow @nogc junk_detect_charset;
+	int function(in char *input, int inlen, char *output, int outlen, in char *cs) nothrow @nogc junk_recode;
+	int function(in char *input, int inlen, char *output, int outlen, in char *cs_in, in char *cs_out) nothrow @nogc junk_iconv;
+	int function(DB_playItem_t *it, uint flags, int id3v2_version, in char *id3v1_encoding) nothrow @nogc junk_rewrite_tags;
 
 	// vfs
-	DB_FILE* function(in char *fname) fopen;
-	void function(DB_FILE *f) fclose;
-	size_t function(void *ptr, size_t size, size_t nmemb, DB_FILE *stream) fread;
-	int function(DB_FILE *stream, long offset, int whence) fseek;
-	long function(DB_FILE *stream) ftell;
-	void function(DB_FILE *stream) rewind;
-	long function(DB_FILE *stream) fgetlength;
-	immutable char * function(DB_FILE *stream) fget_content_type;
-	void function(DB_FILE *stream, DB_playItem_t *it) fset_track;
-	void function(DB_FILE *stream) fabort;
+	DB_FILE* function(in char *fname) nothrow @nogc fopen;
+	void function(DB_FILE *f) nothrow @nogc fclose;
+	size_t function(void *ptr, size_t size, size_t nmemb, DB_FILE *stream) nothrow @nogc fread;
+	int function(DB_FILE *stream, long offset, int whence) nothrow @nogc fseek;
+	long function(DB_FILE *stream) nothrow @nogc ftell;
+	void function(DB_FILE *stream) nothrow @nogc rewind;
+	long function(DB_FILE *stream) nothrow @nogc fgetlength;
+	immutable char * function(DB_FILE *stream) nothrow @nogc fget_content_type;
+	void function(DB_FILE *stream, DB_playItem_t *it) nothrow @nogc fset_track;
+	void function(DB_FILE *stream) nothrow @nogc fabort;
 
 	// message passing
-	int function(uint id, uintptr_t ctx, uint p1, uint p2) sendmessage;
+	int function(uint id, uintptr_t ctx, uint p1, uint p2) nothrow @nogc sendmessage;
 
 	// convenience functions to send events, uses sendmessage internally
-	ddb_event_t * function(uint id) event_alloc;
-	void function(ddb_event_t *ev) event_free;
-	int function(ddb_event_t *ev, uint p1, uint p2) event_send;
+	ddb_event_t * function(uint id) nothrow @nogc event_alloc;
+	void function(ddb_event_t *ev) nothrow @nogc event_free;
+	int function(ddb_event_t *ev, uint p1, uint p2) nothrow @nogc event_send;
 
 	// configuration access
 	//
@@ -901,79 +902,79 @@ struct DB_functions_t {
 	// it should be preferred for fast non-blocking lookups
 	//
 	// all the other config access functions are thread safe
-	void function() conf_lock;
-	void function() conf_unlock;
-	immutable char * function(in char *key, in char *def) conf_get_str_fast;
-	void function(in char *key, in char *def, char *buffer, int buffer_size) conf_get_str;
-	float function(in char *key, float def) conf_get_float;
-	int function(in char *key, int def) conf_get_int;
-	long function(in char *key, long def) conf_get_int64;
-	void function(in char *key, in char *val) conf_set_str;
-	void function(in char *key, int val) conf_set_int;
-	void function(in char *key, long val) conf_set_int64;
-	void function(in char *key, float val) conf_set_float;
-	DB_conf_item_t* function(in char *group, DB_conf_item_t *prev) conf_find;
-	void function(in char *key) conf_remove_items;
-	int function() conf_save;
+	void function() nothrow @nogc conf_lock;
+	void function() nothrow @nogc conf_unlock;
+	immutable char * function(in char *key, in char *def) nothrow @nogc conf_get_str_fast;
+	void function(in char *key, in char *def, char *buffer, int buffer_size) nothrow @nogc conf_get_str;
+	float function(in char *key, float def) nothrow @nogc conf_get_float;
+	int function(in char *key, int def) nothrow @nogc conf_get_int;
+	long function(in char *key, long def) nothrow @nogc conf_get_int64;
+	void function(in char *key, in char *val) nothrow @nogc conf_set_str;
+	void function(in char *key, int val) nothrow @nogc conf_set_int;
+	void function(in char *key, long val) nothrow @nogc conf_set_int64;
+	void function(in char *key, float val) nothrow @nogc conf_set_float;
+	DB_conf_item_t* function(in char *group, DB_conf_item_t *prev) nothrow @nogc conf_find;
+	void function(in char *key) nothrow @nogc conf_remove_items;
+	int function() nothrow @nogc conf_save;
 
 	// plugin communication
-	DB_decoder_s** function() plug_get_decoder_list;
-	DB_vfs_s** function() plug_get_vfs_list;
-	DB_output_s** function() plug_get_output_list;
-	DB_dsp_s** function() plug_get_dsp_list;
-	DB_playlist_s** function() plug_get_playlist_list;
-	DB_plugin_s** function() plug_get_list;
-	immutable char** function() plug_get_gui_names;
-	immutable char * function(in char *id) plug_get_decoder_id;
-	void function(in char *id) plug_remove_decoder_id;
-	DB_plugin_s* function(in char *id) plug_get_for_id;
+	DB_decoder_s** function() nothrow @nogc plug_get_decoder_list;
+	DB_vfs_s** function() nothrow @nogc plug_get_vfs_list;
+	DB_output_s** function() nothrow @nogc plug_get_output_list;
+	DB_dsp_s** function() nothrow @nogc plug_get_dsp_list;
+	DB_playlist_s** function() nothrow @nogc plug_get_playlist_list;
+	DB_plugin_s** function() nothrow @nogc plug_get_list;
+	immutable char** function() nothrow @nogc plug_get_gui_names;
+	immutable char * function(in char *id) nothrow @nogc plug_get_decoder_id;
+	void function(in char *id) nothrow @nogc plug_remove_decoder_id;
+	DB_plugin_s* function(in char *id) nothrow @nogc plug_get_for_id;
 
 	// misc utilities
 	// returns 1 if the track is represented as a local file
 	// returns 0 if it's a remote file, e.g. a network stream
 	// since API 1.5 it also returns 1 for vfs tracks, e.g. from ZIP files
-	int function(in char *fname) is_local_file;
+	int function(in char *fname) nothrow @nogc is_local_file;
 
 	// pcm utilities
-	int function(in ddb_waveformat_t * inputfmt, in char *input, in ddb_waveformat_t *outputfmt, char *output, int inputsize) pcm_convert;
+	int function(in ddb_waveformat_t * inputfmt, in char *input, in ddb_waveformat_t *outputfmt, char *output, int inputsize) nothrow @nogc pcm_convert;
 
 	// dsp preset management
-	int function(in char *fname, ddb_dsp_context_s **head) dsp_preset_load;
-	int function(in char *fname, ddb_dsp_context_s *head) dsp_preset_save;
-	void function(ddb_dsp_context_s *head) dsp_preset_free;
+	int function(in char *fname, ddb_dsp_context_s **head) nothrow @nogc dsp_preset_load;
+	int function(in char *fname, ddb_dsp_context_s *head) nothrow @nogc dsp_preset_save;
+	void function(ddb_dsp_context_s *head) nothrow @nogc dsp_preset_free;
 
 	// since 1.2
 	static if (DDB_API_LEVEL >= 2) {
-		ddb_playlist_t* function(in char *title) plt_alloc;
-		void function(ddb_playlist_t *plt) plt_free;
+		ddb_playlist_t* function(in char *title) nothrow @nogc plt_alloc;
+		void function(ddb_playlist_t *plt) nothrow @nogc plt_free;
 
-		void function(ddb_playlist_t *plt, int fast) plt_set_fast_mode;
-		int function(ddb_playlist_t *plt) plt_is_fast_mode;
+		void function(ddb_playlist_t *plt, int fast) nothrow @nogc plt_set_fast_mode;
+		int function(ddb_playlist_t *plt) nothrow @nogc plt_is_fast_mode;
 
-		immutable char * function(in char *str) metacache_add_string;
-		void function(in char *str) metacache_remove_string;
-		void function(in char *str) metacache_ref;
-		void function(in char *str) metacache_unref;
+		immutable char * function(in char *str) nothrow @nogc metacache_add_string;
+		void function(in char *str) nothrow @nogc metacache_remove_string;
+		void function(in char *str) nothrow @nogc metacache_ref;
+		void function(in char *str) nothrow @nogc metacache_unref;
 
 		// this function must return original un-overriden value (ignoring the keys prefixed with '!')
 		// it's not thread-safe, and must be used under the same conditions as the
 		// pl_find_meta
-		immutable char * function(DB_playItem_t *it, in char *key) pl_find_meta_raw;
+		immutable char * function(DB_playItem_t *it, in char *key) nothrow @nogc pl_find_meta_raw;
 	}
 
 	// since 1.3
 	static if (DDB_API_LEVEL >= 3) {
-		int function() streamer_dsp_chain_save;
+		int function() nothrow @nogc streamer_dsp_chain_save;
 	}
 
 	// since 1.4
 	static if (DDB_API_LEVEL >= 4) {
-		int function(DB_playItem_t *it, in char *key, char *val, int size) pl_get_meta;
-		int function(DB_playItem_t *it, in char *key, char *val, int size) pl_get_meta_raw;
-		int function(ddb_playlist_t *handle, in char *key, char *val, int size) plt_get_meta;
+		int function(DB_playItem_t *it, in char *key, char *val, int size) nothrow @nogc pl_get_meta;
+		int function(DB_playItem_t *it, in char *key, char *val, int size) nothrow @nogc pl_get_meta_raw;
+		int function(ddb_playlist_t *handle, in char *key, char *val, int size) nothrow @nogc plt_get_meta;
 
 		// fast way to test if a field exists in playitem
-		int function(DB_playItem_t *it, in char *key) pl_meta_exists;
+		int function(DB_playItem_t *it, in char *key) nothrow @nogc pl_meta_exists;
 	}
 
 	// since 1.5
@@ -983,8 +984,8 @@ struct DB_functions_t {
 		// ctx must be unique
 		// the waveform data can be arbitrary size
 		// the samples are interleaved
-		void function(void *ctx, void function(void *ctx, ddb_audio_data_t *data) callback) vis_waveform_listen;
-		void function(void *ctx) vis_waveform_unlisten;
+		void function(void *ctx, void function(void *ctx, ddb_audio_data_t *data) callback) nothrow @nogc vis_waveform_listen;
+		void function(void *ctx) nothrow @nogc vis_waveform_unlisten;
 
 		// register/unregister for getting continuous spectrum (frequency domain) data
 		// mainly for visualization
@@ -992,41 +993,41 @@ struct DB_functions_t {
 		// the data always contains DDB_FREQ_BANDS frames
 		// max number of channels is DDB_FREQ_MAX_CHANNELS
 		// the samples are non-interleaved
-		void function(void *ctx, void function(void *ctx, ddb_audio_data_t *data) callback) vis_spectrum_listen;
-		void function(void *ctx) vis_spectrum_unlisten;
+		void function(void *ctx, void function(void *ctx, ddb_audio_data_t *data) callback) nothrow @nogc vis_spectrum_listen;
+		void function(void *ctx) nothrow @nogc vis_spectrum_unlisten;
 
 		// this is useful to mute/unmute audio, and query the muted status, from
 		// plugins, without touching the volume control
-		void function(int mute) audio_set_mute;
-		int function() audio_is_mute;
+		void function(int mute) nothrow @nogc audio_set_mute;
+		int function() nothrow @nogc audio_is_mute;
 
 		// this is useful for prompting a user when he attempts to quit the player
 		// while something is working in background, e.g. the Converter,
 		// and let him finish or cancel the background jobs.
-		void function() background_job_increment;
-		void function() background_job_decrement;
-		int function() have_background_jobs;
+		void function() nothrow @nogc background_job_increment;
+		void function() nothrow @nogc background_job_decrement;
+		int function() nothrow @nogc have_background_jobs;
 
 		// utility function to get plt idx from handle
-		int function(ddb_playlist_t *plt) plt_get_idx;
+		int function(ddb_playlist_t *plt) nothrow @nogc plt_get_idx;
 
 		// save referenced playlist in config
 		// same as pl_save_current, but for index
-		int function(int n) plt_save_n;
+		int function(int n) nothrow @nogc plt_save_n;
 
 		// same as pl_save_current, but for playlist pointer
-		int function(ddb_playlist_t *plt) plt_save_config;
+		int function(ddb_playlist_t *plt) nothrow @nogc plt_save_config;
 
 		// register file added callback
 		// the callback will be called for each file
 		// the visibility is taken from plt_add_* arguments
 		// the callback must return 0 to continue, or -1 to abort the operation.
 		// returns ID
-		int function(int function(ddb_fileadd_data_t *data, void *user_data) callback, void *user_data) listen_file_added;
-		void function(int id) unlisten_file_added;
+		int function(int function(ddb_fileadd_data_t *data, void *user_data) callback, void *user_data) nothrow @nogc listen_file_added;
+		void function(int id) nothrow @nogc unlisten_file_added;
 
-		int function(void function(ddb_fileadd_data_t *data, void *user_data) callback_begin, void function(ddb_fileadd_data_t *data, void *user_data) callback_end, void *user_data) listen_file_add_beginend;
-		void function(int id) unlisten_file_add_beginend;
+		int function(void function(ddb_fileadd_data_t *data, void *user_data) callback_begin, void function(ddb_fileadd_data_t *data, void *user_data) callback_end, void *user_data) nothrow @nogc listen_file_add_beginend;
+		void function(int id) nothrow @nogc unlisten_file_add_beginend;
 
 		// visibility is a number, which tells listeners about the caller.
 		// the value DDB_FILEADD_VISIBILITY_GUI (or 0) is reserved for callers which
@@ -1043,11 +1044,11 @@ struct DB_functions_t {
 		//
 		// the registered listeners will be called too, the ddb_fileadd_data_t
 		// has the visibility
-		DB_playItem_t* function(int visibility, ddb_playlist_t *plt, ddb_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) plt_load2;
-		int function(int visibility, ddb_playlist_t *plt, in char *fname, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) plt_add_file2;
-		int function(int visibility, ddb_playlist_t *plt, in char *dirname, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) plt_add_dir2;
-		ddb_playItem_t* function(int visibility, ddb_playlist_t *playlist, ddb_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) plt_insert_file2;
-		ddb_playItem_t* function(int visibility, ddb_playlist_t *plt, ddb_playItem_t *after, in char *dirname, int *pabort, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) plt_insert_dir2;
+		DB_playItem_t* function(int visibility, ddb_playlist_t *plt, ddb_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) nothrow @nogc plt_load2;
+		int function(int visibility, ddb_playlist_t *plt, in char *fname, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) nothrow @nogc plt_add_file2;
+		int function(int visibility, ddb_playlist_t *plt, in char *dirname, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) nothrow @nogc plt_add_dir2;
+		ddb_playItem_t* function(int visibility, ddb_playlist_t *playlist, ddb_playItem_t *after, in char *fname, int *pabort, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) nothrow @nogc plt_insert_file2;
+		ddb_playItem_t* function(int visibility, ddb_playlist_t *plt, ddb_playItem_t *after, in char *dirname, int *pabort, int function(DB_playItem_t *it, void *user_data) callback, void *user_data) nothrow @nogc plt_insert_dir2;
 
 		// request lock for adding files to playlist
 		// returns 0 on success
@@ -1056,19 +1057,19 @@ struct DB_functions_t {
 		// or wait until previous operation finishes
 		// NOTE: it's not guaranteed that all deadbeef versions support
 		// adding the files to different playlists in parallel.
-		int function(ddb_playlist_t *plt, int visibility) plt_add_files_begin;
+		int function(ddb_playlist_t *plt, int visibility) nothrow @nogc plt_add_files_begin;
 
 		// release the lock for adding files to playlist
 		// end must be called when add files operation is finished
-		void function(ddb_playlist_t *plt, int visibility) plt_add_files_end;
+		void function(ddb_playlist_t *plt, int visibility) nothrow @nogc plt_add_files_end;
 
 		// deselect all tracks in playlist
-		void function(ddb_playlist_t *plt) plt_deselect_all;
+		void function(ddb_playlist_t *plt) nothrow @nogc plt_deselect_all;
 	}
 	// since 1.6
 	static if (DDB_API_LEVEL >= 6) {
-		void function(ddb_playlist_t *plt, int scroll) plt_set_scroll;
-		int function(ddb_playlist_t *plt) plt_get_scroll;
+		void function(ddb_playlist_t *plt, int scroll) nothrow @nogc plt_set_scroll;
+		int function(ddb_playlist_t *plt) nothrow @nogc plt_get_scroll;
 	}
 
 	// since 1.8
@@ -1078,10 +1079,10 @@ struct DB_functions_t {
 		// compile the input title formatting string into bytecode
 		// script: freeform string with title formatting special characters in it
 		// returns the pointer to compiled bytecode, which must be tf_free'd by the caller.
-		char * function(in char *script) tf_compile;
+		char * function(in char *script) nothrow @nogc tf_compile;
 
 		// free the code returned by tf_compile
-		void function(char *code) tf_free;
+		void function(char *code) nothrow @nogc tf_free;
 
 		// evaluate the titleformatting script in a given context
 		// ctx: a pointer to ddb_tf_context_t structure initialized by the caller
@@ -1089,39 +1090,39 @@ struct DB_functions_t {
 		// out: buffer allocated by the caller, must be big enough to fit the output string
 		// outlen: the size of out buffer
 		// returns -1 on fail, output size on success
-		int function(ddb_tf_context_t *ctx, in char *code, char *output, int outlen) tf_eval;
+		int function(ddb_tf_context_t *ctx, in char *code, char *output, int outlen) nothrow @nogc tf_eval;
 
 		// sort using title formatting v2
-		void function(ddb_playlist_t *plt, int iter, int id, in char *format, int order) plt_sort_v2;
+		void function(ddb_playlist_t *plt, int iter, int id, in char *format, int order) nothrow @nogc plt_sort_v2;
 
 		// playqueue APIs
-		int function(DB_playItem_t *it) playqueue_push;
-		void function() playqueue_pop;
-		void function(DB_playItem_t *it) playqueue_remove;
-		void function() playqueue_clear;
-		int function(DB_playItem_t *it) playqueue_test;
-		int function() playqueue_get_count;
-		DB_playItem_t* function(int n) playqueue_get_item;
-		int function(int n) playqueue_remove_nth;
-		void function(int n, DB_playItem_t *it) playqueue_insert_at;
+		int function(DB_playItem_t *it) nothrow @nogc playqueue_push;
+		void function() nothrow @nogc playqueue_pop;
+		void function(DB_playItem_t *it) nothrow @nogc playqueue_remove;
+		void function() nothrow @nogc playqueue_clear;
+		int function(DB_playItem_t *it) nothrow @nogc playqueue_test;
+		int function() nothrow @nogc playqueue_get_count;
+		DB_playItem_t* function(int n) nothrow @nogc playqueue_get_item;
+		int function(int n) nothrow @nogc playqueue_remove_nth;
+		void function(int n, DB_playItem_t *it) nothrow @nogc playqueue_insert_at;
 
 		// system directory API, returns path by id from ddb_sys_directory_t enum
-		immutable char * function(int dir_id) get_system_dir;
+		immutable char * function(int dir_id) nothrow @nogc get_system_dir;
 
 		// set the selected playlist for the ongoing plugin action.
 		// the "set" function is expected to be called by the UI plugin,
 		// while the "get" is expected to be called by the action code.
-		void function(ddb_playlist_t *plt) action_set_playlist;
+		void function(ddb_playlist_t *plt) nothrow @nogc action_set_playlist;
 
 		// returns one of:
 		// selected playlist for context menu for the DDB_ACTION_CTX_PLAYLIST,
 		// or the current active playlist for any other context.
 		// returned value cannot be NULL
 		// returned value is refcounted, so remember to call plt_unref.
-		ddb_playlist_t * function() action_get_playlist;
+		ddb_playlist_t* function() nothrow @nogc action_get_playlist;
 
 		// convert legacy title formatting to the new format, usable with tf_compile
-		void function(in char *fmt, char *output, int outsize) tf_import_legacy;
+		void function(in char *fmt, char *output, int outsize) nothrow @nogc tf_import_legacy;
 	}
 }
 
